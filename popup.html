@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Auto Reloader</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body class="theme-default">
+  <script src="theme-init.js"></script>
+
+  <header class="header">
+    <div class="header-title">Auto Reloader</div>
+    <div class="header-subtitle">Tab refresh controller</div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-panel="current">Current</button>
+    <button class="nav-tab" data-panel="timers" id="navTimers">Timers</button>
+    <button class="nav-tab" data-panel="automation">Automation</button>
+    <button class="nav-tab" data-panel="options">Options</button>
+  </nav>
+
+  <main class="panels">
+
+    <!-- CURRENT PANEL -->
+    <section class="panel panel-current active">
+      <div class="current-header">
+        <div class="current-favicon" id="currentFavicon"></div>
+        <div class="current-title" id="currentTitle"></div>
+      </div>
+
+      <div class="ring-container">
+        <div class="ring">
+          <span class="ring-value" id="ringValue">0s</span>
+        </div>
+      </div>
+
+      <div class="current-controls">
+        <label class="field">
+          <span>Interval (seconds, minimum 30)</span>
+          <input type="number" id="intervalInput" min="30" step="5" value="30" />
+        </label>
+
+        <button id="startStopBtn" class="primary-btn">Start</button>
+        <button id="pauseResumeBtn" class="secondary-btn">Pause</button>
+
+        <div class="current-summary" id="currentSummary"></div>
+      </div>
+    </section>
+
+    <!-- TIMERS PANEL -->
+    <section class="panel panel-timers" id="panelTimers">
+      <div class="panel-header">
+        <h2>Active &amp; Paused Timers</h2>
+        <div class="panel-actions">
+          <button id="pauseAllBtn" class="secondary-btn">Pause All</button>
+          <button id="stopAllBtn" class="secondary-btn">Stop All</button>
+        </div>
+      </div>
+      <div class="timers-list" id="timersList"></div>
+    </section>
+
+    <!-- AUTOMATION PANEL -->
+    <section class="panel panel-automation">
+      <div class="panel-header">
+        <h2>Automation Rules</h2>
+      </div>
+
+      <div class="rules-config">
+        <label class="field">
+          <span>Match type</span>
+          <select id="ruleMatchType">
+            <option value="contains">Contains text</option>
+            <option value="glob">Wildcard (* and ?)</option>
+            <option value="regex">Regular expression</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Pattern</span>
+          <input type="text" id="rulePatternInput" placeholder="e.g. example.com" />
+        </label>
+
+        <label class="field">
+          <span>Interval (seconds, minimum 30)</span>
+          <input type="number" id="ruleIntervalInput" min="30" step="5" value="30" />
+        </label>
+
+        <label class="field">
+          <span>URL (optional, for Open)</span>
+          <input type="text" id="ruleUrlInput" placeholder="https://example.com/page" />
+        </label>
+
+        <div class="form-error" id="ruleError" role="alert"></div>
+
+        <button id="addRuleBtn" class="primary-btn">Add / Update Rule</button>
+        <div class="form-hint">Click a rule's name below to edit it.</div>
+      </div>
+
+      <div class="rules-list" id="rulesList"></div>
+    </section>
+
+    <!-- OPTIONS PANEL -->
+    <section class="panel panel-options">
+      <div class="panel-header">
+        <h2>Options</h2>
+      </div>
+
+      <div class="options-section">
+        <label class="field">
+          <span>Theme</span>
+          <select id="themeSelect">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="blue">Blue</option>
+          </select>
+        </label>
+
+        <label class="field field-inline">
+          <span>Bypass cache when reloading</span>
+          <input type="checkbox" id="bypassCacheToggle" />
+        </label>
+
+        <label class="field field-inline">
+          <span>Don't reload the tab I'm viewing</span>
+          <input type="checkbox" id="skipFocusedToggle" />
+        </label>
+
+        <label class="field field-inline">
+          <span>Developer Mode</span>
+          <input type="checkbox" id="developerModeToggle" />
+        </label>
+      </div>
+
+      <div class="panel-debug" id="debugPanel">
+        <h3>Debug</h3>
+        <pre id="debugOutput"></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -8,5 +8,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint ."
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^3.9.9"
+  }
 }

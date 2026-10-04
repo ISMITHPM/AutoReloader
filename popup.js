@@ -4,7 +4,7 @@ const MAX_INTERVAL_SECONDS = 7 * 24 * 60 * 60;
 const PATTERN_PLACEHOLDERS = {
   contains: "e.g. example.com",
   glob: "e.g. https://example.com/*",
-  regex: "e.g. ^https://example\\.com/.*"
+  regex: "e.g. ^https://example\\.com/.*",
 };
 
 /* ------------------------------------------------------------------ */
@@ -102,7 +102,7 @@ function computeRemaining(timer) {
 let state = {
   timers: {},
   rules: [],
-  settings: { theme: "default", developerMode: false, bypassCache: false, skipFocusedTab: false }
+  settings: { theme: "default", developerMode: false, bypassCache: false, skipFocusedTab: false },
 };
 
 let currentTabId = null;
@@ -179,7 +179,7 @@ function wireCurrentPanel() {
     if (!isLive(state.timers[currentTabId])) {
       await act({
         type: "START_TIMER",
-        payload: { tabId: currentTabId, intervalSeconds: readInterval(intervalInput) }
+        payload: { tabId: currentTabId, intervalSeconds: readInterval(intervalInput) },
       });
     } else {
       await act({ type: "STOP_TIMER", payload: { tabId: currentTabId } });
@@ -192,13 +192,15 @@ function wireCurrentPanel() {
 
     await act({
       type: timer.status === "active" ? "PAUSE_TIMER" : "RESUME_TIMER",
-      payload: { tabId: currentTabId }
+      payload: { tabId: currentTabId },
     });
   });
 }
 
 function wireTimersPanel() {
-  document.getElementById("pauseAllBtn").addEventListener("click", () => act({ type: "PAUSE_ALL" }));
+  document
+    .getElementById("pauseAllBtn")
+    .addEventListener("click", () => act({ type: "PAUSE_ALL" }));
   document.getElementById("stopAllBtn").addEventListener("click", () => act({ type: "STOP_ALL" }));
 }
 
@@ -230,9 +232,7 @@ function wireAutomationPanel() {
 
     const existing = state.rules.find(
       (r) =>
-        r.pattern === pattern &&
-        (r.matchType || "regex") === matchType &&
-        (!url || r.url === url)
+        r.pattern === pattern && (r.matchType || "regex") === matchType && (!url || r.url === url)
     );
 
     const rule = {
@@ -243,7 +243,7 @@ function wireAutomationPanel() {
       url: url || null,
       status: existing ? existing.status : "active",
       title: existing ? existing.title : pattern,
-      faviconUrl: existing ? existing.faviconUrl : ""
+      faviconUrl: existing ? existing.faviconUrl : "",
     };
 
     const res = await act({ type: "UPDATE_RULE", payload: { rule } });
@@ -262,7 +262,7 @@ function wireOptionsPanel() {
   const toggles = [
     ["bypassCacheToggle", "bypassCache"],
     ["skipFocusedToggle", "skipFocusedTab"],
-    ["developerModeToggle", "developerMode"]
+    ["developerModeToggle", "developerMode"],
   ];
   toggles.forEach(([id, key]) => {
     document.getElementById(id).addEventListener("change", (e) => {
@@ -335,8 +335,7 @@ function renderCurrentPanel() {
 
   const remaining = computeRemaining(timer) ?? timer.intervalSeconds;
   ringValue.textContent = `${remaining}s`;
-  summaryEl.textContent =
-    `Status: ${timer.status} • Interval: ${timer.intervalSeconds}s • Remaining: ${remaining}s`;
+  summaryEl.textContent = `Status: ${timer.status} • Interval: ${timer.intervalSeconds}s • Remaining: ${remaining}s`;
 }
 
 function renderTimersPanel() {
@@ -355,8 +354,12 @@ function renderTimersPanel() {
     if (activeTab?.dataset.panel === "timers") {
       const currentBtn = document.querySelector('.nav-tab[data-panel="current"]');
       const currentPanel = document.querySelector(".panel-current");
-      document.querySelectorAll(".nav-tab").forEach((b) => b.classList.toggle("active", b === currentBtn));
-      document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p === currentPanel));
+      document
+        .querySelectorAll(".nav-tab")
+        .forEach((b) => b.classList.toggle("active", b === currentBtn));
+      document
+        .querySelectorAll(".panel")
+        .forEach((p) => p.classList.toggle("active", p === currentPanel));
     }
     panelTimers.classList.remove("active");
     return;
@@ -382,7 +385,7 @@ function renderTimersPanel() {
       statusClass: "timer-status",
       statusLabel: t.status === "active" ? "Active" : "Paused",
       intervalSeconds: t.intervalSeconds,
-      countdownKey: t.tabId
+      countdownKey: t.tabId,
     });
 
     main.appendChild(title);
@@ -397,7 +400,7 @@ function renderTimersPanel() {
     toggleBtn.addEventListener("click", () =>
       act({
         type: t.status === "active" ? "PAUSE_TIMER" : "RESUME_TIMER",
-        payload: { tabId: t.tabId }
+        payload: { tabId: t.tabId },
       })
     );
 
@@ -432,7 +435,9 @@ function renderAutomationPanel() {
   listEl.textContent = "";
 
   state.rules.forEach((rule) => {
-    const live = Object.values(state.timers).filter((t) => isLive(t) && t.isAuto && t.ruleId === rule.id);
+    const live = Object.values(state.timers).filter(
+      (t) => isLive(t) && t.isAuto && t.ruleId === rule.id
+    );
     const primary = live.find((t) => t.status === "active") || live[0] || null;
 
     let status;
@@ -459,7 +464,7 @@ function renderAutomationPanel() {
       statusLabel: status,
       intervalSeconds: rule.intervalSeconds,
       countdownKey: primary ? primary.tabId : null,
-      prefix: live.length > 1 ? `${live.length} tabs` : null
+      prefix: live.length > 1 ? `${live.length} tabs` : null,
     });
 
     main.appendChild(titleEl);

@@ -34,7 +34,7 @@ const DEFAULT_SETTINGS = {
   theme: "default",
   developerMode: false,
   bypassCache: false,
-  skipFocusedTab: false
+  skipFocusedTab: false,
 };
 
 /* ------------------------------------------------------------------ */
@@ -50,9 +50,7 @@ function clampInterval(value) {
 }
 
 function safeFavicon(url) {
-  return typeof url === "string" &&
-    url.length <= 2000 &&
-    /^(https?:\/\/|data:image\/)/i.test(url)
+  return typeof url === "string" && url.length <= 2000 && /^(https?:\/\/|data:image\/)/i.test(url)
     ? url
     : "";
 }
@@ -76,7 +74,7 @@ async function readState() {
   return {
     timers: timers && typeof timers === "object" && !Array.isArray(timers) ? timers : {},
     rules: Array.isArray(data[RULES_KEY]) ? data[RULES_KEY] : [],
-    settings: { ...DEFAULT_SETTINGS, ...(data[SETTINGS_KEY] || {}) }
+    settings: { ...DEFAULT_SETTINGS, ...(data[SETTINGS_KEY] || {}) },
   };
 }
 
@@ -100,7 +98,7 @@ function mutate(fn) {
       await chrome.storage.local.set({
         [TIMERS_KEY]: state.timers,
         [RULES_KEY]: state.rules,
-        [SETTINGS_KEY]: state.settings
+        [SETTINGS_KEY]: state.settings,
       });
       await syncBadges(beforeKeys, state.timers);
     }
@@ -129,7 +127,7 @@ function cancelCountdown(tabId) {
 
 function scheduleAlarm(tabId, nextReloadAt) {
   return chrome.alarms.create(alarmName(tabId), {
-    when: Math.max(Date.now(), nextReloadAt * 1000)
+    when: Math.max(Date.now(), nextReloadAt * 1000),
   });
 }
 
@@ -138,7 +136,7 @@ async function clearAlarm(tabId) {
   cancelCountdown(tabId);
   await Promise.all([
     chrome.alarms.clear(alarmName(tabId)),
-    chrome.alarms.clear(warnAlarmName(tabId))
+    chrome.alarms.clear(warnAlarmName(tabId)),
   ]);
 }
 
@@ -249,7 +247,7 @@ function makeTimer(tab, { intervalSeconds, isAuto = false, ruleId = null }) {
     nextReloadAt: nowSec() + intervalSeconds,
     remainingSeconds: null,
     isAuto,
-    ruleId
+    ruleId,
   };
 }
 
@@ -335,9 +333,8 @@ function sanitizeRule(input) {
     intervalSeconds: clampInterval(input.intervalSeconds),
     url,
     status: input.status === STATUS_PAUSED ? STATUS_PAUSED : STATUS_ACTIVE,
-    title:
-      typeof input.title === "string" && input.title ? input.title.slice(0, 200) : pattern,
-    faviconUrl: safeFavicon(input.faviconUrl)
+    title: typeof input.title === "string" && input.title ? input.title.slice(0, 200) : pattern,
+    faviconUrl: safeFavicon(input.faviconUrl),
   };
 
   // An "Open" URL that the rule wouldn't match would be detached right away.
@@ -376,7 +373,7 @@ async function applyRulesToTab(s, tab) {
   const timer = makeTimer(tab, {
     intervalSeconds: rule.intervalSeconds,
     isAuto: true,
-    ruleId: rule.id
+    ruleId: rule.id,
   });
   if (!tab.title && rule.title) timer.title = rule.title;
   if (!timer.faviconUrl) timer.faviconUrl = rule.faviconUrl || "";
@@ -684,7 +681,7 @@ const handlers = {
         const timer = makeTimer(tab, {
           intervalSeconds: rule.intervalSeconds,
           isAuto: true,
-          ruleId: rule.id
+          ruleId: rule.id,
         });
         if (!tab.title) timer.title = rule.title || "Untitled";
         timer.faviconUrl = timer.faviconUrl || rule.faviconUrl || "";
@@ -692,7 +689,7 @@ const handlers = {
         await armTimer(timer);
       }
       return { ok: true };
-    })
+    }),
 };
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {

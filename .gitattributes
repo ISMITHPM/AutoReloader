@@ -1,0 +1,20 @@
+# Store text files with LF in the repo AND in every checkout (Windows included),
+# so Prettier, ESLint, shell hooks and CI all see the same bytes.
+* text=auto eol=lf
+*.png binary
+
+# Files left out of the Chrome Web Store package (`npm run package` uses git archive).
+.github/ export-ignore
+.husky/ export-ignore
+scripts/ export-ignore
+tests/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.prettierignore export-ignore
+.prettierrc export-ignore
+eslint.config.mjs export-ignore
+package.json export-ignore
+package-lock.json export-ignore
+README.md export-ignore
+PRIVACY.md export-ignore
+LICENSE export-ignore
